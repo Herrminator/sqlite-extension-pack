@@ -1,0 +1,76 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "sqlite3 test (32-bit production)",
+            "type": "lldb",
+            "request": "launch",
+            "program": "sqlite3",
+            "windows": {
+                "program": "${workspaceFolder}/../sqlite3.exe",
+                "env": {
+                    "PATH": "${env:PATH};${workspaceRoot}\\build\\x86-debug",
+                    "HELLO": "Hello World!",
+                }
+            },
+            "env": {
+                "HELLO": "Hello World!"
+            },
+            "args": [
+                "-batch",
+                ":memory:",
+                ".read tests.sql"
+            ],
+            "cwd": "${workspaceRoot}/src/tests",
+            // https://github.com/vadimcn/codelldb/issues/751
+            // "stopOnEntry": false,
+        },
+        {
+            "name": "sqlite3 test (active test preset)",
+            "type": "lldb",
+            "request": "launch",
+            "program": "sqlite3",
+            "env": {
+                "HELLO": "Hello World!"
+            },
+            "windows": {
+                "program": "${workspaceFolder}/build/${command:cmake.activeTestPresetName}/sqlite3",
+                "env": {
+                    // "PATH": "${workspaceRoot}\\build\\x64-debug;${env:PATH}",
+                    "PATH": "${workspaceRoot}\\build\\${command:cmake.activeTestPresetName};${env:PATH}",
+                    "HELLO": "Hello World!",
+                }
+            },
+            "args": [
+                "-batch",
+                ":memory:",
+                ".read tests.sql",
+                // "dump.db3",
+                // ".read bugsearch.sql",
+            ],
+            "cwd": "${workspaceRoot}/src/tests",
+            // "cwd": "${workspaceRoot}/tmp",
+            // https://github.com/vadimcn/codelldb/issues/751
+            "stopOnEntry": false,
+        },
+        {
+            "name": "sqlite3 test (delphi)",
+            "type": "lldb",
+            "request": "launch",
+            "program": "sqlite3",
+            "windows": {
+                "program": "${workspaceFolder}/src/tests/SQLiteSpy.exe",
+                "env": {
+                    "PATH": "${env:PATH};${workspaceRoot}\\build\\bcc",
+                    "HELLO": "Hello World!",
+                }
+            },
+            "env": { "HELLO": "Hello World!" },
+            "args": [ ],
+            "cwd": "${workspaceRoot}/src/tests",
+        },
+    ]
+}

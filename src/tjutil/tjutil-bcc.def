@@ -1,0 +1,3 @@
+EXPORTS
+;	sqlite3_extension_init=@sqlite3_sqlitetjutil_init
+	sqlite3_extension_init=@sqlite3_extension_init

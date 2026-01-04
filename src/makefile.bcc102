@@ -1,0 +1,49 @@
+SQLITE_VERSION=latest
+SQLITE_SRC=../../src/$(SQLITE_VERSION)/amalgam
+RELEASE=Release
+
+INCLUDE=.;$(SQLITE_SRC)
+# E:\Develop\BCC2\Include
+LIB=$(SQLITE_SRC);$(BCC_HOME)\lib\win32c\$(RELEASE);$(BCC_HOME)\lib\win32c\$(RELEASE)\psdk
+
+CC=bcc32c
+
+DBGFLAGS=-v
+
+CFLAGS=-I"$(INCLUDE)" -D_RTLENTRY=__foobar -tWM -pr $(DBGFLAGS)\
+       -D_WIN32 \
+       -DSQLITE_EXTENSIONS_METAPHONE    -DSQLITE_EXTENSIONS_LEVENSHTEIN\
+       -DSQLITE_EXTENSIONS_JARO_WINKLER
+# -pr
+# -DSQLITE_EXTENSIONS_SPELLFIX (SQliteSpy has spellfix since 1.9.3 – 11 Apr 2013)
+
+LINK=ILINK32  /Lc"$(LIB)" /Gn $(DBGFLAGS)
+
+# .path.c = .;../src/$(SQLITE_VERSION)/ext;../src/$(SQLITE_VERSION)/ext/misc
+
+all: extension-functions-bcc.dll sqlite3-tjutil-bcc.dll sqlite3-stmt-bcc.dll sqlite3-rot13-bcc.dll
+
+# extension-spellfix.obj
+extension-functions-bcc.dll: extension-functions.obj extension-soundex.obj
+	$(LINK) /Tpd $**, $@, $@.map.tmp , C0d32.OBJ CW32mt.LIB IMPORT32.LIB , extension-functions-bcc.def
+	-@del $(@R).tds
+
+
+sqlite3-tjutil-bcc.dll: tjutil\tjutil.obj
+	$(LINK) /Tpd $**, $@, $@.map.tmp , C0d32.OBJ CW32mt.LIB IMPORT32.LIB WS2_32.LIB , tjutil\tjutil-bcc.def
+	-@del $(@R).tds
+
+sqlite3-stmt-bcc.dll: official\stmt.obj
+	$(LINK) /Tpd $**, $@, $@.map.tmp , C0d32.OBJ CW32mt.LIB IMPORT32.LIB WS2_32.LIB , official\stmt-bcc.def
+	-@del $(@R).tds
+
+sqlite3-rot13-bcc.dll: official\rot13.obj
+	$(LINK) /Tpd $**, $@, $@.map.tmp , C0d32.OBJ CW32mt.LIB IMPORT32.LIB WS2_32.LIB , official\rot13-bcc.def
+	-@del $(@R).tds
+
+.c.obj:
+	$(CC) -c $(CFLAGS) -o$@ $<
+
+clean:
+	-del *.dll *.lib *.exp *.exe *.obj
+

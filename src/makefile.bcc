@@ -1,0 +1,50 @@
+SQLITE_VERSION=latest
+SQLITE_SRC=../../src/$(SQLITE_VERSION)/amalgam
+
+INCLUDE=.;$(SQLITE_SRC);$(BCC_HOME)\Include
+LIB=$(SQLITE_SRC);$(BCC_HOME)\Lib
+OUT=..\build\bcc\ #./build/bcc
+SUFFIX= # -bcc
+
+CFLAGS=-I"$(INCLUDE)" -pr -w-8004 -w-8057 -tWM\
+       -DSQLITE_EXTENSIONS_METAPHONE    -DSQLITE_EXTENSIONS_LEVENSHTEIN\
+       -DSQLITE_EXTENSIONS_JARO_WINKLER
+# -DSQLITE_EXTENSIONS_SPELLFIX (SQliteSpy has spellfix since 1.9.3 – 11 Apr 2013)
+
+LINK=ILINK32  /Lc"$(LIB)" /Gn /v-
+NULL=
+# .path.c = .;../src/$(SQLITE_VERSION)/ext;../src/$(SQLITE_VERSION)/ext/misc
+
+all: $(OUT)extension-functions$(SUFFIX).dll $(OUT)sqlite3-tjutil$(SUFFIX).dll \
+     $(OUT)sqlite3-stmt$(SUFFIX).dll $(OUT)sqlite3-rot13$(SUFFIX).dll \
+     $(OUT)sqlite3-lua$(SUFFIX).dll
+
+#  extension-spellfix.obj (s.a.)
+$(OUT)extension-functions$(SUFFIX).dll: extension-functions.obj extension-soundex.obj
+	$(LINK) /Tpd -x $**, $@, $(NULL) , C0d32.OBJ CW32mt.LIB IMPORT32.LIB , extension-functions-bcc.def
+	-@del $(@R).tds
+
+$(OUT)sqlite3-tjutil$(SUFFIX).dll: tjutil\tjutil.obj
+	$(LINK) /Tpd -x $**, $@, $(NULL) , C0d32.OBJ CW32mt.LIB IMPORT32.LIB WS2_32.LIB , tjutil\tjutil-bcc.def
+	-@del $(@R).tds
+
+$(OUT)sqlite3-stmt$(SUFFIX).dll: official\stmt.obj
+	$(LINK) /Tpd -x $**, $@, $(NULL) , C0d32.OBJ CW32mt.LIB IMPORT32.LIB , official\stmt-bcc.def
+	-@del $(@R).tds
+
+$(OUT)sqlite3-rot13$(SUFFIX).dll: official\rot13.obj
+	$(LINK) /Tpd -x $**, $@, $(NULL) , C0d32.OBJ CW32mt.LIB IMPORT32.LIB , official\rot13-bcc.def
+	-@del $(@R).tds
+
+$(OUT)sqlite3-lua$(SUFFIX).dll: sqlite-lua\src\lua.obj onelua.obj
+	$(LINK) /Tpd -x $**, $@, $(NULL) , C0d32.OBJ CW32mt.LIB IMPORT32.LIB , lua-bcc.def
+	-@del $(@R).tds
+
+.c.obj:
+	$(CC) -c $(CFLAGS) -o$@ $<
+
+onelua.obj: sqlite-lua\lua\onelua.c
+	$(CC) -c $(CFLAGS) -I".\sqlite-lua\lua" -DMAKE_LIB -o$@ sqlite-lua\lua\onelua.c
+
+clean:
+	-del $(OUT)*.dll *.lib *.exp *.exe *.obj tjutil\*.obj official\*.obj

@@ -1,0 +1,27 @@
+/build
+/Debug
+/Release
+/tmp
+**/out/*
+*.7z
+*.a
+*.bak
+*.db3
+*.del
+*.dll
+*.exe
+*.log
+*.obj
+*.org
+*.ren
+*.sav
+*.sqlite
+*.tar.gz
+*.tgz
+*-out.txt
+*.vcxproj.user
+*.zip
+CMakeUserPresets.json
+
+# obsolete
+/x64
