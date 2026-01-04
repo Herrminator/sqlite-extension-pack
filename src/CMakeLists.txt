@@ -41,9 +41,8 @@ set_target_properties(sqlite3-extension-functions extension-functions PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/"
 )
 
-if(WIN32)
-    set(CMAKE_SHARED_LIBRARY_PREFIX "")
-endif(WIN32)
+# sqlite3 searches verbatim. I.e. `select load_extension('foo')` will try "foo" and "foo.so" or "foo.dll", not "libfoo.so".
+set(CMAKE_SHARED_LIBRARY_PREFIX "")
 
 install(TARGETS sqlite3-extension-functions extension-functions)
 

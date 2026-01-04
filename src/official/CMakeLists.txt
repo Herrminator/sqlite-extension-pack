@@ -24,9 +24,7 @@ set_target_properties(${official_extensions} PROPERTIES
   RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/"
 )
 
-if(WIN32)
-    set(CMAKE_SHARED_LIBRARY_PREFIX "")
-endif(WIN32)
+set(CMAKE_SHARED_LIBRARY_PREFIX "")
 
 install(TARGETS ${official_extensions})
 

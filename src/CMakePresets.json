@@ -59,13 +59,17 @@
             "name": "linux-base",
             "inherits": "config-base",
             "generator": "Unix Makefiles",
-            "installDir": "$Env{HOME}/.local",
-            "hidden": true
+            "installDir": "$ENV{HOME}/.local",
+            "hidden": true,
+            "cacheVariables": {
+                "SQLITE3_32": "OFF"
+            }
         },
         {
             "name": "linux-release",
             "inherits": "linux-base",
             "cacheVariables": {
+                "SQLITE3_32": "OFF",
                 "CMAKE_BUILD_TYPE": "Release"
             }
         },
@@ -100,23 +104,33 @@
     ],
     "buildPresets": [
         {
+            "name": "build-base",
+            "jobs": 8,
+            "hidden": true
+        },
+        {
             "name": "debug - x86",
+            "inherits": "build-base",
             "configurePreset": "x86-debug"
         },
         {
             "name": "release - x86",
+            "inherits": "build-base",
             "configurePreset": "x86-release"
         },
         {
             "name": "debug - x64",
+            "inherits": "build-base",
             "configurePreset": "x64-debug"
         },
         {
             "name": "release - x64",
+            "inherits": "build-base",
             "configurePreset": "x64-release"
         },
         {
             "name": "release with debug info - x64",
+            "inherits": "build-base",
             "configurePreset": "x64-release-debug"
         }
     ],
@@ -140,6 +154,18 @@
         {
             "name": "x64-release-debug",
             "configurePreset": "x64-release-debug"
+        },
+        {
+            "name": "linux-release",
+            "configurePreset": "linux-release"
+        },
+        {
+            "name": "linux-debug",
+            "configurePreset": "linux-debug"
+        },
+        {
+            "name": "linux-release-debug",
+            "configurePreset": "linux-release-debug"
         }
     ]
 }

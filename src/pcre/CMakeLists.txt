@@ -14,15 +14,15 @@ else()
     set(SQLITE3_PCRE_SOURCE "sqlite3-pcre")
 endif(SQLITE3_PCRE_FETCH)
 
-add_compile_definitions(PCRE_STATIC)
-
 add_library(sqlite3-pcre SHARED  "${SQLITE3_PCRE_SOURCE}/pcre.c") # $<$<BOOL:BORLAND>:tjutil-bcc-llvm.def>)
 
 if(UNIX)
     find_library(pcre pcre)
 endif(UNIX)
 
-if(NOT pcre)
+if(NOT pcre OR (pcre STREQUAL "pcre-NOTFOUND"))
+    add_compile_definitions(PCRE_STATIC)
+
     # https://stackoverflow.com/a/3769269/10545609
     set(PCRE_SUPPORT_JIT ON CACHE BOOL "Support JIT")
     set(PCRE_SUPPORT_UTF ON CACHE BOOL "Support UTF-8")
@@ -69,6 +69,9 @@ if(NOT pcre)
 
 else()
     find_path(pcre_include pcre.h)
+    if(pcre_include STREQUAL "pcre_include-NOTFOUND")
+        message( SEND_ERROR "'pcre.h' not found. Please install 'libpcre3-dev'" )
+    endif()
     include_directories(${pcre_include})
     target_link_libraries(sqlite3-pcre PRIVATE ${pcre})
 endif()
@@ -77,10 +80,7 @@ if(SQLITE3_32)
     set_target_properties(sqlite3-pcre PROPERTIES COMPILE_OPTIONS "-m32" LINK_FLAGS "-m32")
 endif(SQLITE3_32)
 
-# https://github.com/shader-slang/slang/issues/5896#issuecomment-2552730762
-if(WIN32)
-    set(CMAKE_SHARED_LIBRARY_PREFIX "")
-endif(WIN32)
+set(CMAKE_SHARED_LIBRARY_PREFIX "")
 
 set_target_properties(sqlite3-pcre PROPERTIES
   ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/" # $<CONFIG>/

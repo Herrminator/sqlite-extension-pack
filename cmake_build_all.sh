@@ -1,5 +1,6 @@
 #!/bin/bash
 presets="x86-debug x86-release x64-debug x64-release x64-release-debug"
+[ -z "${WINDIR}" ] && presets="linux-debug linux-release linux-release-debug"
 
 for p in $presets; do
     echo "Building $p"
@@ -9,6 +10,8 @@ for p in $presets; do
         exit 8
     fi
 done
+
+[ -z "${WINDIR}" ] && exit
 
 # TODO: bcc
 pushd src

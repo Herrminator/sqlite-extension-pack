@@ -29,15 +29,14 @@
             // "stopOnEntry": false,
         },
         {
-            "name": "sqlite3 test (active test preset)",
+            "name": "sqlite3 test (lldb active test preset)",
             "type": "lldb",
             "request": "launch",
-            "program": "sqlite3",
+            "program": "${workspaceFolder}/build/${command:cmake.activeTestPresetName}/sqlite3",
             "env": {
                 "HELLO": "Hello World!"
             },
             "windows": {
-                "program": "${workspaceFolder}/build/${command:cmake.activeTestPresetName}/sqlite3",
                 "env": {
                     // "PATH": "${workspaceRoot}\\build\\x64-debug;${env:PATH}",
                     "PATH": "${workspaceRoot}\\build\\${command:cmake.activeTestPresetName};${env:PATH}",
@@ -55,6 +54,35 @@
             // "cwd": "${workspaceRoot}/tmp",
             // https://github.com/vadimcn/codelldb/issues/751
             "stopOnEntry": false,
+        },
+        {
+            "name": "sqlite3 test (gdb active test preset)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/${command:cmake.activeTestPresetName}/sqlite3",
+            "environment": [
+                { "name": "HELLO", "value": "Hello World!" },
+            ],
+            "windows": {
+                "environment": [
+                    { "name": "HELLO", "value": "Hello World!" },
+                    { "name": "PATH", "value": "${workspaceRoot}\\build\\${command:cmake.activeTestPresetName};${env:PATH}" },
+                ],
+            },
+            "linux": {
+                "environment": [
+                    { "name": "HELLO", "value": "Hello World!" },
+                    { "name": "LD_LIBRARY_PATH", "value": "${workspaceRoot}/build/${command:cmake.activeTestPresetName}:${env:LD_LIBRARY_PATH}" },
+                ],
+            },
+            "args": [
+                "-batch",
+                ":memory:",
+                ".read tests.sql",
+                // "dump.db3",
+                // ".read bugsearch.sql",
+            ],
+            "cwd": "${workspaceRoot}/src/tests",
         },
         {
             "name": "sqlite3 test (delphi)",

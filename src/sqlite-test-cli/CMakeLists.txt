@@ -8,13 +8,23 @@ get_filename_component(dflt_src "../../../src/latest" ABSOLUTE)
 set(SQLITE3_AUTOCONF "${dflt_src}/autoconf" CACHE STRING "Directory for SQLite autconf sources") # https://sqlite.org/download.html
 set(SQLITE3_AMALGAM  "${dflt_src}/amalgam"  CACHE STRING "Directory for SQLite amalgamation sources")
 
+if(NOT IS_DIRECTORY ${SQLITE3_AUTOCONF} OR NOT IS_DIRECTORY ${SQLITE3_AMALGAM})
+    # TODO: Download ourselves?
+    message(FATAL_ERROR "Cannot find SQLite 3 sources at '${SQLITE3_AUTOCONF}' and '${SQLITE3_AMALGAM}'.
+Please download and install both or -DSQLITE3_AUTOCONF=... and -DSQLITE3_AMALGAM=... !")
+endif()
+
 include_directories(${SQLITE3_AMALGAM})
 add_executable(sqlite3 ${SQLITE3_AMALGAM}/sqlite3.c ${SQLITE3_AMALGAM}/shell.c) # $<$<BOOL:BORLAND>:tjutil-bcc-llvm.def>)
+target_link_libraries(sqlite3 m)
 
 if(SQLITE3_32)
     set_target_properties(sqlite3 PROPERTIES COMPILE_OPTIONS "-m32" LINK_FLAGS "-m32")
     set(opts_file "${PROJECT_SOURCE_DIR}/sqlite3.x86.options")
     set(test_arch "32-bit")
+elseif(LINUX)
+    set(opts_file "${PROJECT_SOURCE_DIR}/sqlite3.linux.options")
+    set(test_arch "64-bit")
 else()
     set(opts_file "${PROJECT_SOURCE_DIR}/sqlite3.x64.options")
     set(test_arch "64-bit")
@@ -27,7 +37,9 @@ if(EXISTS ${opts_file})
         list(POP_FRONT options opt)
         target_compile_definitions(sqlite3 PRIVATE ${opt})
     endwhile()
-    target_compile_options(sqlite3 PRIVATE -Wno-macro-redefined)
+    if(NOT LINUX)
+        target_compile_options(sqlite3 PRIVATE -Wno-macro-redefined)
+    endif(NOT LINUX)
 endif()
 
 # https://github.com/shader-slang/slang/issues/5896#issuecomment-2552730762

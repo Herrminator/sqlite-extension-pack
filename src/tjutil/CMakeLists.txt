@@ -22,9 +22,11 @@ set_target_properties(sqlite3-tjutil PROPERTIES
 )
 
 if(WIN32)
-    set(CMAKE_SHARED_LIBRARY_PREFIX "")
     target_link_libraries(sqlite3-tjutil wsock32 ws2_32)
 endif(WIN32)
+
+# sqlite3 searches verbatim. I.e. `select load_extension('foo')` will try "foo" and "foo.so" or "foo.dll", not "libfoo.so".
+set(CMAKE_SHARED_LIBRARY_PREFIX "")
 
 install(TARGETS sqlite3-tjutil)
 
