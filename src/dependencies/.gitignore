@@ -1,0 +1,3 @@
+# This directory is used for CMake-downloaded dependencies like Lua, PCRE, ...
+*
+!.gitignore

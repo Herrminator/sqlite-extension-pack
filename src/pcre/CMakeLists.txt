@@ -9,6 +9,7 @@ if(SQLITE3_PCRE_FETCH)
 
     FetchContent_Declare(sqlite3-pcre
         GIT_REPOSITORY https://github.com/ralight/sqlite3-pcre.git
+        SOURCE_DIR "${CMAKE_SOURCE_DIR}/dependencies/sqlite3-pcre"
         PATCH_COMMAND git apply "${CMAKE_CURRENT_SOURCE_DIR}/sqlite3-pcre.patch"
     )
     FetchContent_MakeAvailable(sqlite3-pcre)
@@ -40,6 +41,7 @@ if(NOT pcre OR (pcre STREQUAL "pcre-NOTFOUND"))
     if(SQLITE3_PCRE_FETCH)
         FetchContent_Declare(pcre-git
             GIT_REPOSITORY https://github.com/nektro/pcre-8.45.git
+            SOURCE_DIR "${CMAKE_SOURCE_DIR}/dependencies/pcre-git"
             PATCH_COMMAND git apply "${CMAKE_CURRENT_SOURCE_DIR}/pcre-git.patch"
         )
         FetchContent_MakeAvailable(pcre-git)

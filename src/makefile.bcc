@@ -52,4 +52,4 @@ $(OUT)\onelua.obj: $(LUA_SOURCE)\onelua.c
 	$(CC) -c $(CFLAGS) -I"$(LUA_SOURCE)" -DMAKE_LIB -o$@ $(LUA_SOURCE)\onelua.c
 
 clean:
-	-del $(OUT)*.dll *.lib *.exp *.exe *.obj tjutil\*.obj official\*.obj
+	-del $(OUT)*.dll *.lib *.exp *.exe *.obj tjutil\*.obj official\*.obj $(OUT)*.obj
