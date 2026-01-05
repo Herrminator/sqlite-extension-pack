@@ -1,6 +1,8 @@
 SQLITE_VERSION=latest
 SQLITE_SRC=../../src/$(SQLITE_VERSION)/amalgam
 
+# LUA_SOURCE=. # must be defined on the command line
+# SQLITE_LUA_SOURCE=. # must be defined on the command line
 INCLUDE=.;$(SQLITE_SRC);$(BCC_HOME)\Include
 LIB=$(SQLITE_SRC);$(BCC_HOME)\Lib
 OUT=..\build\bcc\ #./build/bcc
@@ -36,15 +38,18 @@ $(OUT)sqlite3-rot13$(SUFFIX).dll: official\rot13.obj
 	$(LINK) /Tpd -x $**, $@, $(NULL) , C0d32.OBJ CW32mt.LIB IMPORT32.LIB , official\rot13-bcc.def
 	-@del $(@R).tds
 
-$(OUT)sqlite3-lua$(SUFFIX).dll: sqlite-lua\src\lua.obj onelua.obj
+$(OUT)sqlite3-lua$(SUFFIX).dll: $(OUT)\onelua.obj $(OUT)\sqlite-lua.obj
 	$(LINK) /Tpd -x $**, $@, $(NULL) , C0d32.OBJ CW32mt.LIB IMPORT32.LIB , lua-bcc.def
 	-@del $(@R).tds
 
 .c.obj:
 	$(CC) -c $(CFLAGS) -o$@ $<
 
-onelua.obj: sqlite-lua\lua\onelua.c
-	$(CC) -c $(CFLAGS) -I".\sqlite-lua\lua" -DMAKE_LIB -o$@ sqlite-lua\lua\onelua.c
+$(OUT)\sqlite-lua.obj: $(SQLITE_LUA_SOURCE)\src\lua.c
+	$(CC) -c $(CFLAGS) -I"$(LUA_SOURCE)" -DMAKE_LIB -o$@ $(SQLITE_LUA_SOURCE)\src\lua.c
+
+$(OUT)\onelua.obj: $(LUA_SOURCE)\onelua.c
+	$(CC) -c $(CFLAGS) -I"$(LUA_SOURCE)" -DMAKE_LIB -o$@ $(LUA_SOURCE)\onelua.c
 
 clean:
 	-del $(OUT)*.dll *.lib *.exp *.exe *.obj tjutil\*.obj official\*.obj

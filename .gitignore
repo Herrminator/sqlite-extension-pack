@@ -21,6 +21,7 @@
 *-out.txt
 *.vcxproj.user
 *.zip
+.vs
 CMakeUserPresets.json
 
 # obsolete

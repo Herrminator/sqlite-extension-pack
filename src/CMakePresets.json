@@ -89,6 +89,24 @@
             }
         },
         {
+            "name": "msvc-x86-release",
+            "inherits": "config-base",
+            "generator": "NMake Makefiles",
+            "cacheVariables": {
+                "SQLITE3_32": "OFF",
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        {
+            "name": "msvc-x86-debug",
+            "inherits": "config-base",
+            "generator": "NMake Makefiles",
+            "cacheVariables": {
+                "SQLITE3_32": "OFF",
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
             "name": "bcc",
             "binaryDir": "${sourceParentDir}/build/${presetName}",
             "generator": "Borland Makefiles",
@@ -154,6 +172,14 @@
         {
             "name": "x64-release-debug",
             "configurePreset": "x64-release-debug"
+        },
+        {
+            "name": "msvc-x86-release",
+            "configurePreset": "msvc-x86-release"
+        },
+        {
+            "name": "msvc-x86-debug",
+            "configurePreset": "msvc-x86-debug"
         },
         {
             "name": "linux-release",

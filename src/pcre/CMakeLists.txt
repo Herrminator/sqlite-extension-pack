@@ -7,7 +7,10 @@ option(SQLITE3_PCRE_FETCH "Fetch pcre sources from GitHub and patch" ON)
 if(SQLITE3_PCRE_FETCH)
     include(FetchContent)
 
-    FetchContent_Declare(sqlite3-pcre GIT_REPOSITORY https://github.com/ralight/sqlite3-pcre.git)
+    FetchContent_Declare(sqlite3-pcre
+        GIT_REPOSITORY https://github.com/ralight/sqlite3-pcre.git
+        PATCH_COMMAND git apply "${CMAKE_CURRENT_SOURCE_DIR}/sqlite3-pcre.patch"
+    )
     FetchContent_MakeAvailable(sqlite3-pcre)
     set(SQLITE3_PCRE_SOURCE "${sqlite3-pcre_SOURCE_DIR}")
 else()
@@ -64,7 +67,11 @@ if(NOT pcre OR (pcre STREQUAL "pcre-NOTFOUND"))
       LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/"
       RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/"
     )
-    set_property(TARGET pcretest pcregrep pcre_jit_test APPEND_STRING PROPERTY LINK_FLAGS " -Wl,--stack,16000000") # GCC or compatible required anyway...
+    if(NOT MSVC)
+        set_property(TARGET pcretest pcregrep pcre_jit_test APPEND_STRING PROPERTY LINK_FLAGS " -Wl,--stack,16000000")
+    else()
+        set_property(TARGET pcretest pcregrep pcre_jit_test APPEND_STRING PROPERTY LINK_FLAGS " /STACK:16000000")
+    endif()
     target_link_libraries(sqlite3-pcre PRIVATE pcre)
 
 else()
@@ -79,6 +86,10 @@ endif()
 if(SQLITE3_32)
     set_target_properties(sqlite3-pcre PROPERTIES COMPILE_OPTIONS "-m32" LINK_FLAGS "-m32")
 endif(SQLITE3_32)
+
+if(MSVC)
+    target_link_options(sqlite3-pcre PRIVATE "/DEF:${CMAKE_CURRENT_SOURCE_DIR}/sqlite3-pcre.def")
+endif()
 
 set(CMAKE_SHARED_LIBRARY_PREFIX "")
 

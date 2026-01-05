@@ -4,6 +4,7 @@ project(sqlite-extensions VERSION 3.51.1)
 
 include(CTest)
 
+include(./MSVC.cmake)
 include(./Borland.cmake)
 
 add_subdirectory(sqlite-test-cli)
@@ -27,11 +28,13 @@ elseif(SQLITE3_32)
     set_target_properties(sqlite3-extension-functions extension-functions PROPERTIES COMPILE_OPTIONS "-m32" LINK_FLAGS "-m32")
     if (WIN32)
         set(CPACK_SYSTEM_NAME "x86")
-        set(CPACK_GENERATOR NSIS 7Z)
     endif(WIN32)
 else()
     set(CPACK_SYSTEM_NAME "x64")
 endif(BORLAND)
+if (WIN32)
+    set(CPACK_GENERATOR NSIS 7Z)
+endif(WIN32)
 
 
 # https://github.com/shader-slang/slang/issues/5896#issuecomment-2552730762

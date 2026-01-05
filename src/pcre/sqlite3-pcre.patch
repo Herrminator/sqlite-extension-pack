@@ -1,0 +1,14 @@
+diff --git a/pcre.c b/pcre.c
+index cee345b..21bb36a 100644
+--- a/pcre.c
++++ b/pcre.c
+@@ -108,8 +108,8 @@ void regexp(sqlite3_context *ctx, int argc, sqlite3_value **argv)
+ 
+ int sqlite3_extension_init(sqlite3 *db, char **err, const sqlite3_api_routines *api)
+ {
+-	SQLITE_EXTENSION_INIT2(api)
+ 	cache_entry *cache = calloc(CACHE_SIZE, sizeof(cache_entry));
++	SQLITE_EXTENSION_INIT2(api)
+ 	if (!cache) {
+ 	    *err = "calloc: ENOMEM";
+ 	    return 1;

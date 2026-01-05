@@ -120,7 +120,7 @@ Original code 2006 June 05 by relicoder.
 #define SQLITE_SOUNDEX 1
 #define HAVE_TRIM 1		/* LMH 2007-03-25 if sqlite has trim functions */
 
-#if defined(__BORLANDC__)
+#if defined(__BORLANDC__) || (defined _MSC_VER && _MSC_VER < 1600)
   #undef HAVE_ACOSH
   #undef HAVE_ASINH
   #undef HAVE_ATANH
