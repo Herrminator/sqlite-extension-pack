@@ -12,19 +12,10 @@ if(BORLAND)
     set_source_files_properties(stmt-bcc-llvm.def rot13-bcc-llvm.def series-bcc-llvm.def  PROPERTIES EXTERNAL_OBJECT TRUE)
     set_target_properties(${official_extensions} PROPERTIES COMPILE_OPTIONS "-pr" LINK_FLAGS "-pr")
     # set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_CURRENT_SOURCE_DIR}/tjutil-bcc-llvm.def")
-elseif(SQLITE3_32)
-    set_target_properties(${official_extensions} PROPERTIES COMPILE_OPTIONS "-m32" LINK_FLAGS "-m32")
 endif(BORLAND)
 
-
-# https://github.com/shader-slang/slang/issues/5896#issuecomment-2552730762
-set_target_properties(${official_extensions} PROPERTIES
-  ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/" # $<CONFIG>/
-  LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/"
-  RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/"
-)
-
-set(CMAKE_SHARED_LIBRARY_PREFIX "")
+sqlite_set_target_architecture(${official_extensions})
+sqlite_set_target_output(${official_extensions})
 
 install(TARGETS ${official_extensions})
 

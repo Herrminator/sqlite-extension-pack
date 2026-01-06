@@ -8,25 +8,18 @@ add_library(sqlite3-tjutil SHARED  tjutil.c) # $<$<BOOL:BORLAND>:tjutil-bcc-llvm
 if(BORLAND)
     set_source_files_properties(tjutil-bcc-llvm.def PROPERTIES EXTERNAL_OBJECT TRUE)
     set_target_properties(sqlite3-tjutil PROPERTIES COMPILE_OPTIONS "-pr" LINK_FLAGS "-pr")
-    # set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_CURRENT_SOURCE_DIR}/tjutil-bcc-llvm.def")
-elseif(SQLITE3_32)
-    set_target_properties(sqlite3-tjutil PROPERTIES COMPILE_OPTIONS "-m32" LINK_FLAGS "-m32")
 endif(BORLAND)
 
 
-# https://github.com/shader-slang/slang/issues/5896#issuecomment-2552730762
-set_target_properties(sqlite3-tjutil PROPERTIES
-  ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/" # $<CONFIG>/
-  LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/"
-  RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/"
-)
+# sqlite3 searches verbatim. I.e. `select load_extension('foo')` will try "foo" and "foo.so" or "foo.dll", not "libfoo.so".
+# set(CMAKE_SHARED_LIBRARY_PREFIX  "")
+
+sqlite_set_target_architecture(sqlite3-tjutil)
+sqlite_set_target_output(sqlite3-tjutil)
 
 if(WIN32)
     target_link_libraries(sqlite3-tjutil wsock32 ws2_32)
 endif(WIN32)
-
-# sqlite3 searches verbatim. I.e. `select load_extension('foo')` will try "foo" and "foo.so" or "foo.dll", not "libfoo.so".
-set(CMAKE_SHARED_LIBRARY_PREFIX "")
 
 install(TARGETS sqlite3-tjutil)
 

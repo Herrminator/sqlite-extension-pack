@@ -37,4 +37,5 @@ create temporary view test_values(left, right)
     -- This causes problems if metaphone is compiled with -O2
     (values ('Right Now', 'Right On'))
   select metaphone(left), metaphone(right) from test;
-.check 'RFTN|RFTN' -- The error case: .check 'RTNW|RTN'
+.check 'RFTN|RFTN'
+    -- The wrong result would be: .check 'RTNW|RTN'

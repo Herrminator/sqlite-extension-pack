@@ -4,6 +4,7 @@ project(sqlite-extensions VERSION 3.51.1)
 
 include(CTest)
 
+include(./sqlite_util.cmake)
 include(./MSVC.cmake)
 include(./Borland.cmake)
 
@@ -20,12 +21,18 @@ add_compile_definitions(
     SQLITE_EXTENSIONS_JARO_WINKLER
 )
 
+if(SQLITE3_32)
+    sqlite_need_arch("x86")
+else()
+    sqlite_need_arch("x64")
+endif()
+
+
 if(BORLAND)
     set_source_files_properties(extension-functions-bcc.def PROPERTIES EXTERNAL_OBJECT TRUE)
     set_target_properties(sqlite3-extension-functions extension-functions PROPERTIES COMPILE_OPTIONS "-pr" LINK_FLAGS "-pr")
     # set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_CURRENT_SOURCE_DIR}/tjutil-bcc-llvm.def")
 elseif(SQLITE3_32)
-    set_target_properties(sqlite3-extension-functions extension-functions PROPERTIES COMPILE_OPTIONS "-m32" LINK_FLAGS "-m32")
     if (WIN32)
         set(CPACK_SYSTEM_NAME "x86")
     endif(WIN32)
@@ -37,15 +44,8 @@ if (WIN32)
 endif(WIN32)
 
 
-# https://github.com/shader-slang/slang/issues/5896#issuecomment-2552730762
-set_target_properties(sqlite3-extension-functions extension-functions PROPERTIES
-    ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/" # $<CONFIG>/
-    LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/"
-    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/"
-)
-
-# sqlite3 searches verbatim. I.e. `select load_extension('foo')` will try "foo" and "foo.so" or "foo.dll", not "libfoo.so".
-set(CMAKE_SHARED_LIBRARY_PREFIX "")
+sqlite_set_target_architecture(sqlite3-extension-functions extension-functions)
+sqlite_set_target_output(sqlite3-extension-functions extension-functions)
 
 install(TARGETS sqlite3-extension-functions extension-functions)
 

@@ -11,6 +11,10 @@ typedef unsigned __int16  uint16_t;
 typedef unsigned __int32  uint32_t ;
 #endif
 
+#if (defined _MSC_VER && _MSC_VER < 1600)
+#    define inline
+#endif
+
 #else
 
 #error "You probably don't need this file. Please rename!"

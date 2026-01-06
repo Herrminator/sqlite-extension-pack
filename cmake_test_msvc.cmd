@@ -1,7 +1,15 @@
-@call dnenv
+@echo off
 pushd src
-ctest --preset "msvc-x86-debug" %*
-if errorlevel 1 exit
-ctest --preset "msvc-x86-release" %*
-if errorlevel 1 exit
+call :test vcenv32 ctest --preset "msvc-x86-debug" %*
+call :test vcenv32 ctest --preset "msvc-x86-release" %*
+call :test vcenv   ctest --preset "msvc-x64-debug" %*
+call :test vcenv   ctest --preset "msvc-x64-release" %*
 popd
+goto :eof
+
+:test
+    call %*
+    if errorlevel 1 (
+        echo FAILED: %*
+        exit %errorlevel%
+    )

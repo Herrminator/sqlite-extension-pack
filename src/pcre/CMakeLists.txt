@@ -61,14 +61,9 @@ if(NOT pcre OR (pcre STREQUAL "pcre-NOTFOUND"))
     # add_compile_definitions(SUPPORT_JIT)
     # and this one, we need in sqlite3-pcre, too
     include_directories(${PCRE_SOURCE})
-    if(SQLITE3_32)
-        set_target_properties(pcre pcreposix pcretest pcregrep pcre_jit_test PROPERTIES COMPILE_OPTIONS "-m32" LINK_FLAGS "-m32")
-    endif(SQLITE3_32)
-    set_target_properties(pcre pcreposix pcretest pcregrep PROPERTIES # NOT: pcre_jit_test
-      ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/" # $<CONFIG>/
-      LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/"
-      RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/"
-    )
+    sqlite_set_target_architecture(pcre pcreposix pcretest pcregrep pcre_jit_test)
+    sqlite_set_target_output(pcre pcreposix pcretest pcregrep)
+    # Follow the hint from failed test no. 2:
     if(NOT MSVC)
         set_property(TARGET pcretest pcregrep pcre_jit_test APPEND_STRING PROPERTY LINK_FLAGS " -Wl,--stack,16000000")
     else()
@@ -85,21 +80,13 @@ else()
     target_link_libraries(sqlite3-pcre PRIVATE ${pcre})
 endif()
 
-if(SQLITE3_32)
-    set_target_properties(sqlite3-pcre PROPERTIES COMPILE_OPTIONS "-m32" LINK_FLAGS "-m32")
-endif(SQLITE3_32)
+sqlite_set_target_architecture(sqlite3-pcre)
 
 if(MSVC)
     target_link_options(sqlite3-pcre PRIVATE "/DEF:${CMAKE_CURRENT_SOURCE_DIR}/sqlite3-pcre.def")
 endif()
 
-set(CMAKE_SHARED_LIBRARY_PREFIX "")
-
-set_target_properties(sqlite3-pcre PROPERTIES
-  ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/" # $<CONFIG>/
-  LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/"
-  RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/"
-)
+sqlite_set_target_output(sqlite3-pcre)
 
 install(TARGETS sqlite3-pcre)
 

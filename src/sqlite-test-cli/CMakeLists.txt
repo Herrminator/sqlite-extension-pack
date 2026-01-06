@@ -21,14 +21,11 @@ if(NOT MSVC)
 endif()
 
 if(SQLITE3_32)
-    set_target_properties(sqlite3 PROPERTIES COMPILE_OPTIONS "-m32" LINK_FLAGS "-m32")
     set(opts_file "${PROJECT_SOURCE_DIR}/sqlite3.x86.options")
     set(test_arch "32-bit")
 elseif(LINUX)
     set(opts_file "${PROJECT_SOURCE_DIR}/sqlite3.linux.options")
     set(test_arch "64-bit")
-elseif(MSVC)
-    set(test_arch "32-bit") # well, it depends (on how vcvarsall.bat is called)
 else()
     set(opts_file "${PROJECT_SOURCE_DIR}/sqlite3.x64.options")
     set(test_arch "64-bit")
@@ -46,12 +43,8 @@ if(EXISTS ${opts_file})
     endif()
 endif()
 
-# https://github.com/shader-slang/slang/issues/5896#issuecomment-2552730762
-set_target_properties(sqlite3 PROPERTIES
-  ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/" # $<CONFIG>/
-  LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/"
-  RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/"
-)
+sqlite_set_target_architecture(sqlite3)
+sqlite_set_target_output(sqlite3)
 
 install(TARGETS sqlite3)
 

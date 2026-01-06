@@ -32,17 +32,8 @@ list(FILTER lua_sources EXCLUDE REGEX ".*onelua\\.c")
 add_library(sqlite3-lua SHARED  "${SQLITE3_SQLITE_LUA_SOURCE}/src/lua.c" ${lua_sources})
 target_include_directories(sqlite3-lua PRIVATE ${SQLITE3_LUA_SOURCE})
 
-if(SQLITE3_32)
-    set_target_properties(sqlite3-lua PROPERTIES COMPILE_OPTIONS "-m32" LINK_FLAGS "-m32")
-endif(SQLITE3_32)
-
-set(CMAKE_SHARED_LIBRARY_PREFIX "")
-
-set_target_properties(sqlite3-lua PROPERTIES
-  ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/" # $<CONFIG>/
-  LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/"
-  RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/"
-)
+sqlite_set_target_architecture(sqlite3-lua)
+sqlite_set_target_output(sqlite3-lua)
 
 install(TARGETS sqlite3-lua)
 
