@@ -10,11 +10,9 @@ if(SQLITE3_LUA_FETCH)
     FetchContent_Declare(lua
         GIT_REPOSITORY https://github.com/lua/lua.git
         GIT_TAG "v5.5.0"
-        SOURCE_DIR "${CMAKE_SOURCE_DIR}/dependencies/lua"
     )
     FetchContent_Declare(sqlite-lua
         GIT_REPOSITORY https://github.com/abiliojr/sqlite-lua.git
-        SOURCE_DIR "${CMAKE_SOURCE_DIR}/dependencies/sqlite-lua"
     )
     FetchContent_MakeAvailable(lua)
     FetchContent_MakeAvailable(sqlite-lua)
