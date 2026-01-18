@@ -2,7 +2,7 @@ function(sqlite_need_arch arch)
     set(machine_flag "")
     # https://github.com/axr/solar-cmake/blob/master/TargetArch.cmake
     if(arch STREQUAL "x64")
-        set(check_me "#if ! (defined(__x86_64__) || defined(_WIN64))\n#error 64 Bit compiler required\n#endif\nint main() { return 0; }")
+        set(check_me "#if ! (defined(__x86_64__) || defined(_WIN64) || defined(__aarch64__))\n#error 64 Bit compiler required\n#endif\nint main() { return 0; }")
     else()
         # Micke$ofts compiler doesn't have a compile / link falg to switch modes.
         # Instead, you have start a new environment with all the PATHs properly set ;(
@@ -10,7 +10,7 @@ function(sqlite_need_arch arch)
         if(NOT MSVC)
             set(machine_flag "-m32")
         endif()
-        set(check_me "#if defined(__x86_64__) || defined(_WIN64)\n#error 32 Bit compiler required\n#endif\nint main() { return 0; }")
+        set(check_me "#if defined(__x86_64__) || defined(_WIN64) || defined(__aarch64__)\n#error 32 Bit compiler required\n#endif\nint main() { return 0; }")
     endif()
 
     try_compile(success

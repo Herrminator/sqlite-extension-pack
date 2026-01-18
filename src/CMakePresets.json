@@ -11,7 +11,8 @@
             "binaryDir": "${sourceParentDir}/build/${presetName}",
             "installDir": "${sourceParentDir}/Release/${presetName}",
             "generator": "MinGW Makefiles",
-            "hidden": true
+            "hidden": true,
+            "condition": { "lhs": "${hostSystemName}", "type": "equals", "rhs": "Windows"}
         },
         {
             "name": "x86-release",
@@ -59,11 +60,10 @@
             "name": "linux-base",
             "inherits": "config-base",
             "generator": "Unix Makefiles",
-            "installDir": "$ENV{HOME}/.local",
+            "installDir": "${sourceParentDir}/Release",
             "hidden": true,
-            "cacheVariables": {
-                "SQLITE3_32": "OFF"
-            }
+            "condition": { "lhs": "${hostSystemName}", "type": "equals", "rhs": "Linux"},
+            "cacheVariables": { "SQLITE3_32": "OFF" }
         },
         {
             "name": "linux-release",
@@ -76,7 +76,7 @@
         {
             "name": "linux-debug",
             "inherits": "linux-release",
-            "installDir": "/tmp/debug",
+            "installDir": "${sourceParentDir}/Debug",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Debug"
             }
@@ -84,6 +84,7 @@
         {
             "name": "linux-release-debug",
             "inherits": "linux-release",
+            "installDir": "${sourceParentDir}/Debug/Release",
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "RelWithDebInfo"
             }
@@ -131,13 +132,14 @@
             "binaryDir": "${sourceParentDir}/build/${presetName}",
             "generator": "Borland Makefiles",
             "environment": {
-                "CC": "$Env{BCC_HOME}\\bin\\bcc32.exe",
-                "CXX": "$Env{BCC_HOME}\\bin\\bcc32.exe",
-                "LIB": "$Env{BCC_HOME}\\lib"
+                "CC": "$env{BCC_HOME}\\bin\\bcc32.exe",
+                "CXX": "$env{BCC_HOME}\\bin\\bcc32.exe",
+                "LIB": "$env{BCC_HOME}\\lib"
             },
             "cacheVariables": {
                 "CMAKE_BUILD_TYPE": "Release"
-            }
+            },
+            "condition": { "lhs": "${hostSystemName}", "type": "equals", "rhs": "Windows"}
         }
     ],
     "buildPresets": [

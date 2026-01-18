@@ -6,10 +6,13 @@
 - [ ] Enable `readline` for sqlite3 on Linux
 - [x] CMake tests
 # Build / Deploy
-- [ ] Revert fetch / Clone Git repositories outside build?
+- [x] Revert fetch / Clone Git repositories outside build?
 - [x] Explore CPack
 - [x] Linux
+- [x] Linux aarch64
 - [x] MSVC
 - [x] MSVC x64
+- [ ] Explore Ninja
 - [ ] Alpine / Docker
 - [ ] Specify SQLite version and download?
+- [ ] Linux armhf?
