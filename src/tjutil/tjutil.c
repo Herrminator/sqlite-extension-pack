@@ -195,7 +195,7 @@ EXTENSION_EXPORT int sqlite3_extension_init( // sqlite3_sqlitetjutil_init(
     rc = sqlite3_create_function(db, "writefile", 2, SQLITE_UTF8, 0, writefileFunc, 0, 0);
   }
   if( rc==SQLITE_OK ){
-    rc = sqlite3_create_function(db, "inet_aton", -1, SQLITE_UTF8|SQLITE_INNOCUOUS, 0, inet_aton_Func, 0, 0);
+    rc = sqlite3_create_function(db, "inet_aton", -1, SQLITE_UTF8|SQLITE_INNOCUOUS|SQLITE_DETERMINISTIC, 0, inet_aton_Func, 0, 0);
   }
   if( rc==SQLITE_OK ){
     rc = sqlite3_create_function(db, "getenv", -1, SQLITE_UTF8|SQLITE_INNOCUOUS, 0, getenvFunc, 0, 0);
