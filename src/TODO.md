@@ -1,9 +1,9 @@
 # Extensions
 - [x] sqlite3-lua with `FetchContent` (incl. Lua itself)
-- [ ] Bring official extensions up-to-date (3.51.1, like alpine 3.23)
+- [ ] Bring official extensions up-to-date (3.51.2, like alpine 3.23)
 # Debug / Tests
 - [x] Build `sqlite3` CLI for tests (32/64 bit)
-- [ ] Enable `readline` for sqlite3 on Linux
+- [x] Enable `readline` for sqlite3 on Linux
 - [x] CMake tests
 # Build / Deploy
 - [x] Revert fetch / Clone Git repositories outside build?

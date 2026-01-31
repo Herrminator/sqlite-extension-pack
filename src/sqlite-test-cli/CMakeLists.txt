@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 4.0)
 project(sqlite3-cli)
 
+include(CheckIncludeFiles)
+
 option(SQLITE3_32  "Create 32-bit binaries" ON)
 
 get_filename_component(dflt_src "../../../src/latest" ABSOLUTE)
@@ -18,6 +20,12 @@ include_directories(${SQLITE3_AMALGAM})
 add_executable(sqlite3 ${SQLITE3_AMALGAM}/sqlite3.c ${SQLITE3_AMALGAM}/shell.c) # $<$<BOOL:BORLAND>:tjutil-bcc-llvm.def>)
 if(NOT MSVC)
     target_link_libraries(sqlite3 m)
+endif()
+
+check_include_files("readline/readline.h;readline/history.h" HAVE_READLINE)
+if (HAVE_READLINE)
+    target_compile_definitions(sqlite3 PRIVATE -DHAVE_READLINE)
+    target_link_libraries(sqlite3 readline)
 endif()
 
 if(SQLITE3_32)
