@@ -53,6 +53,7 @@ add_test(NAME test_extension_functions
     COMMAND sqlite3 ":memory:" ".read '${CMAKE_SOURCE_DIR}/tests/test-extension-functions.sql'"
     WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/tests"
 )
+set_tests_properties(test_extension_functions PROPERTIES ENVIRONMENT "LD_LIBRARY_PATH=${CMAKE_BINARY_DIR}")
 
 add_subdirectory(tjutil)
 add_subdirectory(official)

@@ -92,3 +92,4 @@ add_test(NAME test_extension_pcre
     COMMAND sqlite3 ":memory:" ".read '${CMAKE_SOURCE_DIR}/tests/test-pcre.sql'"
     WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/tests"
 )
+set_tests_properties(test_extension_pcre PROPERTIES ENVIRONMENT "LD_LIBRARY_PATH=${CMAKE_BINARY_DIR}")

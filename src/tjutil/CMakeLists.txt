@@ -27,4 +27,4 @@ add_test(NAME test_extension_tjutil
     COMMAND sqlite3 ":memory:" ".read '${CMAKE_SOURCE_DIR}/tests/test-tjutil.sql'"
     WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/tests"
 )
-set_tests_properties(test_extension_tjutil PROPERTIES ENVIRONMENT "HELLO=Hello World!")
+set_tests_properties(test_extension_tjutil PROPERTIES ENVIRONMENT "HELLO=Hello World!;LD_LIBRARY_PATH=${CMAKE_BINARY_DIR}")

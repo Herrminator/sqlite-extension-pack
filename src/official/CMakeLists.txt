@@ -23,4 +23,5 @@ foreach(test rot13 stmt series)
     add_test(NAME test_extension_${test} COMMAND sqlite3 ":memory:" ".read '${CMAKE_SOURCE_DIR}/tests/test-${test}.sql'"
         WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/tests"
     )
+    set_tests_properties(test_extension_${test} PROPERTIES ENVIRONMENT "LD_LIBRARY_PATH=${CMAKE_BINARY_DIR}")
 endforeach()
