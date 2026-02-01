@@ -1,6 +1,7 @@
 # Extensions
 - [x] sqlite3-lua with `FetchContent` (incl. Lua itself)
-- [ ] Bring official extensions up-to-date (3.51.2, like alpine 3.23)
+- [ ] Use LUA_USE_POSIX on Linux 
+- [x] Bring official extensions up-to-date (3.51.2, like alpine 3.23)
 # Debug / Tests
 - [x] Build `sqlite3` CLI for tests (32/64 bit)
 - [x] Enable `readline` for sqlite3 on Linux

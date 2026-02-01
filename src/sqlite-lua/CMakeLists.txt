@@ -32,6 +32,9 @@ target_include_directories(sqlite3-lua PRIVATE ${SQLITE3_LUA_SOURCE})
 
 sqlite_set_target_architecture(sqlite3-lua)
 sqlite_set_target_output(sqlite3-lua)
+if(LINUX)
+    target_compile_definitions(sqlite3-lua PRIVATE LUA_USE_POSIX)
+endif()
 
 install(TARGETS sqlite3-lua)
 
