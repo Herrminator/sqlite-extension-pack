@@ -107,6 +107,45 @@ static void getenvFunc(
     sqlite3_result_null(context); // TODO: really? ignore invalid ip_addresses
 }
 
+static void setenvFunc(
+  sqlite3_context *context,
+  int argc,
+  sqlite3_value **argv
+){
+  const char *zName, *zVal;
+  char       errmsg[1024] = "Usage: setenv(name, value)";
+  int        rc = 0;
+
+  if (argc != 2)    { sqlite3_result_error(context, errmsg, -1); return; }
+
+  zName = (const char*)sqlite3_value_text(argv[0]);
+  if( zName==0 ) return;
+  zVal = (const char*)sqlite3_value_text(argv[1]);
+  if (zVal == 0) zVal = "";
+#if (defined(_WIN64) || defined(_WIN32)) && !defined(__BORLANDC__)
+  rc = _putenv_s(zName, zVal);
+#elif defined(__BORLANDC__)
+  {
+    // rotten old putenv: https://pubs.opengroup.org/onlinepubs/9699919799/functions/putenv.html : never free!
+    size_t bufsz = strlen(zName) + strlen(zVal) + 3;
+    char* buf = sqlite3_malloc(bufsz);
+    snprintf(buf, bufsz, "%s=%s", zName, zVal); 
+    rc = putenv(buf);
+  }
+#else
+  rc = *zVal != 0 ? setenv(zName, zVal, 1) : unsetenv(zName);
+#endif
+  if(rc != 0) {
+    sqlite3_result_error(context, strerror(errno), -1);
+    sqlite3_result_error_code(context, SQLITE_MISUSE);
+    return;
+  }
+  if (*zVal != 0)
+    sqlite3_result_text(context, zVal, -1, SQLITE_TRANSIENT);
+  else
+    sqlite3_result_null(context); // TODO: really? ignore invalid ip_addresses
+}
+
 
 static void inet_aton_Func(sqlite3_context *context, int argc, sqlite3_value **argv)
 {
@@ -198,7 +237,10 @@ EXTENSION_EXPORT int sqlite3_extension_init( // sqlite3_sqlitetjutil_init(
     rc = sqlite3_create_function(db, "inet_aton", -1, SQLITE_UTF8|SQLITE_INNOCUOUS|SQLITE_DETERMINISTIC, 0, inet_aton_Func, 0, 0);
   }
   if( rc==SQLITE_OK ){
-    rc = sqlite3_create_function(db, "getenv", -1, SQLITE_UTF8|SQLITE_INNOCUOUS, 0, getenvFunc, 0, 0);
+    rc = sqlite3_create_function(db, "getenv", 1, SQLITE_UTF8|SQLITE_INNOCUOUS, 0, getenvFunc, 0, 0);
+  }
+  if( rc==SQLITE_OK ){
+    rc = sqlite3_create_function(db, "setenv", 2, SQLITE_UTF8, 0, setenvFunc, 0, 0);
   }
   return rc;
 }

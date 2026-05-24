@@ -15,6 +15,11 @@
   select getenv('HELLO');
 .check 'Hello World!'
 
+.testcase 'setenv-01'
+  select setenv('HELLO', getenv('HELLO') || ' Have a good day!');
+  select getenv('HELLO');
+.check 'Hello World! Have a good day! Hello World! Have a good day!'
+
 .testcase 'fileio-01'
   select writefile('test-tjutil.dat', 'foobar');
   select readfile('test-tjutil.dat');
