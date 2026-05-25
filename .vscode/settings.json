@@ -11,4 +11,6 @@
     "files.associations": {
         "Makefile.bcc": "makefile"
     },
+    // "local.python.for.windows": "C:\\workspaces\\idea\\db-browser\\.venv\\Scripts\\python.exe",
+    "local.python.for.windows": "${env:ProgramFiles}\\Python313\\python.exe",
 }

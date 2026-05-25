@@ -100,5 +100,37 @@
             "args": [ ],
             "cwd": "${workspaceRoot}/src/tests",
         },
+        {
+            "name": "sqlite3 test (lldb python)",
+            "type": "lldb",
+            "request": "launch",
+            "program": "python",
+            "windows": {
+                "program": "${config:local.python.for.windows}", // see settings.json,
+                "env": {
+                     "PATH": "${workspaceRoot}\\build\\${command:cmake.activeTestPresetName};${env:PATH}",
+                }
+           },
+            "env": { "HELLO": "Hello World!" },
+            "args": [
+                "performance.py"
+                // "soundex_performance.py"
+                // "tryme.py"
+            ],
+            "cwd": "${workspaceRoot}/src/tests",
+        },
+        {
+            "name": "Python Debugger: Current File",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "lldb",
+            "request": "attach",
+            "name": "lldb Attach",
+            "pid": "${command:pickMyProcess}" // use ${command:pickProcess} to pick other users' processes
+        },
     ]
 }

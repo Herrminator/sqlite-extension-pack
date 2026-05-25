@@ -1,9 +1,13 @@
+select * from pragma_function_list where name = 'metaphone';
 select load_extension('extension-functions');
+select * from pragma_function_list where name = 'metaphone';
 
+drop table if exists out;
 create temporary table out (
     t text
 );
 
+drop view if exists generator;
 create temporary view generator as
   with recursive gen(n, t) as (
       VALUES(1, 'The longer, the better. The quick brown fox jumped over the lazy dog')
