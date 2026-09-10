@@ -7,4 +7,5 @@ begin;
 .read 'test-lua.sql'
 .read 'test-series.sql'
 .read 'test-stmt.sql'
+.read 'test-spellfix1.sql'
 commit;
